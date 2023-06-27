@@ -15,7 +15,7 @@ export const GamePiece = (props: Props) => {
 
   const [grabPos, setGrabPos] = useState<{ x: number; y: number }>({
     x: 0,
-    y: 0
+    y: 0,
   });
 
   const [{ isDragging }, dragSourceRef] = useDrag(
@@ -23,15 +23,15 @@ export const GamePiece = (props: Props) => {
       type: "piece",
       item: {
         id: props.piece.id,
-        pos: grabPos
+        pos: grabPos,
       },
       collect: (monitor) => ({
-        isDragging: !!monitor.isDragging()
+        isDragging: !!monitor.isDragging(),
       }),
       canDrag: () => !props.piece.placed,
       previewOptions: {
-        captureDraggingState: true
-      }
+        captureDraggingState: true,
+      },
     },
     [grabPos, props.piece]
   );
@@ -52,29 +52,11 @@ export const GamePiece = (props: Props) => {
     const { piece, onRotate } = props;
     if (canRotate) {
       if (e.key === "q") {
-        const newRows = piece.cols;
-        const newCols = piece.rows;
-        const newBuffer = generate2DArray(newCols, newRows, 0);
-
-        //logMatrix(props.piece.data);
-        for (let y = 0; y < piece.rows; y++) {
-          for (let x = 0; x < piece.cols; x++) {
-            newBuffer[newRows - x - 1][y] = piece.data[y][x];
-          }
-        }
-        //logMatrix(newBuffer);
+        const { newBuffer, newRows, newCols } = rotatePiece(piece, "left");
         onRotate(piece.id, newBuffer, newRows, newCols);
       }
       if (e.key === "e") {
-        const newRows = piece.cols;
-        const newCols = piece.rows;
-        const newBuffer = generate2DArray(newCols, newRows, 0);
-        for (let y = 0; y < piece.rows; y++) {
-          for (let x = 0; x < piece.cols; x++) {
-            newBuffer[x][newCols - y - 1] = piece.data[y][x];
-          }
-        }
-
+        const { newBuffer, newRows, newCols } = rotatePiece(piece, "right");
         onRotate(piece.id, newBuffer, newRows, newCols);
       }
     }
@@ -93,7 +75,7 @@ export const GamePiece = (props: Props) => {
         margin: "1rem",
         //fontSize: 25,
         //fontWeight: "bold",
-        cursor: !props.piece.placed ? "move" : ""
+        cursor: !props.piece.placed ? "move" : "",
       }}
       tabIndex={-1}
       rows={props.piece.rows}
@@ -104,7 +86,23 @@ export const GamePiece = (props: Props) => {
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       onKeyPress={onRotate}
+      title="Use q and e to rotate while hovering"
       className="__bounding-rect"
     />
   );
 };
+
+function rotatePiece(piece: PieceInfo, dir: "left" | "right") {
+  const newRows = piece.cols;
+  const newCols = piece.rows;
+  const newBuffer = generate2DArray(newCols, newRows, 0);
+
+  //logMatrix(props.piece.data);
+  for (let y = 0; y < piece.rows; y++) {
+    for (let x = 0; x < piece.cols; x++) {
+      if (dir === "right") newBuffer[x][newCols - y - 1] = piece.data[y][x];
+      if (dir === "left") newBuffer[newRows - x - 1][y] = piece.data[y][x];
+    }
+  }
+  return { newBuffer, newRows, newCols };
+}

@@ -5,6 +5,7 @@
   "keywords": [],
   "main": "src/index.tsx",
   "dependencies": {
+    "@types/styled-components": "^5.1.26",
     "immer": "9.0.21",
     "loader-utils": "3.2.1",
     "lodash": "4.17.21",

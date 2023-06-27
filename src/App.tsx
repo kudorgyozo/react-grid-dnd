@@ -4,7 +4,6 @@ import { GamePiece } from "./GamePiece";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { useImmer } from "use-immer";
-import { logMatrix } from "./utils";
 
 export type PieceInfo = {
   id: number;
@@ -37,8 +36,8 @@ const thePieces: PieceInfo[] = [
       [1], // this is a comment to stop the formatter from formatting
       [1],
       [1],
-      [1]
-    ]
+      [1],
+    ],
   },
   {
     id: 2,
@@ -46,9 +45,9 @@ const thePieces: PieceInfo[] = [
     cols: 3,
     data: [
       [0, 1, 0],
-      [1, 1, 1]
-    ]
-  }
+      [1, 1, 1],
+    ],
+  },
 ];
 
 export default function App() {
